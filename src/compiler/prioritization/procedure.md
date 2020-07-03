@@ -1,46 +1,65 @@
-# Prioritization Process
+# Procedure
 
-The prioritization WG has a process that iterates every two weeks at the end of which we fill up a document with [meeting notes](https://hackmd.io/pHb6eTZ2Sjy6XZmwXZHIBA?view) of `T-compiler` working group (TODO: what is the correct cadence of these meetings?).
+This document details the procedure the WG-prioritization follows to fill the agenda for the [weekly meeting](https://hackmd.io/pHb6eTZ2Sjy6XZmwXZHIBA?view) of `T-compiler`.
+The working group focuses mainly on triaging `T-compiler` and `libs-impl` bugs, deciding if bugs are critical (potential release blockers) or not.
 
-## A typical triaging workflow
+## The procedure in detail
 
-#### 1. Issue gets filed on the [rust-lang repository](https://github.com/rust-lang/rust)
+High level overview:
 
-#### 2. Release team applies labels to issues
+- Follow ups from previous meeting
+  - Remove `I-nominated` tags of already discussed issues
+  - Notify @pnkfelix about stable/beta-nominated issues without stable/beta-accepted labels
+  - Create the next meeting agenda using [the weekly agenda template
+- Prepare contents of the agenda and set up everything in place
+  - Prioritize "Unprioritized I-prioritize" issues
+  - Prioritize regressions without P label
+  - Summarize beta nominations
+  - Summarize stable nominations
+  - Summarize PR's waiting on team
+  - Summarize P-criticals
+  - Summarize unassigned P-high regressions
+  - Summarize nominations
+- Prepare agenda items
+  - Accept MCPs pending to be accepted
+  - Sanity check beta nominations
+  - Sanity check stable nominations
+  - Sanity check PR's waiting on team
+  - Sanity check regressions
+  - Sanity check nominations
+- Generate Agenda
+  - Run cli to generate agenda
+  - Fill agenda announcements
+- Notify the team about the meeting
+  - Figure out which WGs need to check-in
+  - Notify the team about the meeting
+    - Share the agenda
+    - Notify WG leads about checkins
+- Final reviews
+  - Re-sync agenda some minutes before the meeting
+  - Check toolstate
+  - Check performance stats
 
-One or more "area" labels are applied to identify the area of responsability. Area labels are expressed as `A-*` (ex. "A-error-handling", "A-ffi", ... full list [here](https://github.com/rust-lang/rust/labels?q=A-))
+### Follow ups from previous meeting
 
-One or more "team" labels are applied to assign responsability for that issue to the relevant team(s). Team labels are expressed as `T-*` (ex. "T-cargo", "T-compiler", ... full list [here](https://github.com/rust-lang/rust/labels?q=T-))
+The agenda is created as soon as we finish our thursday's weekly meeting.
 
-If bisection is needed, a [MCVE](https://stackoverflow.com/help/minimal-reproducible-example) is requested as well:
+#### Remove `I-nominated` tags of already discussed issues
 
-* label `needs-bisection`, `needs-mcve` are added to the issue
-* label `ICEBreaker-Cleanup-Crew` is added to the issue (they can help improving the quality of the report, by producing a MCVE or the bisection)
+### prepare contents of the ...
 
-In general, if the scope and impact of the issue is straightforward to understand, it is directly prioritized or sent to the relevant area, otherwise it is  "nominated" for compiler team meeting (that is, appointed for discussion during the meeting).
+#### Sanity check beta nominations
 
-#### 3. Release team nominates for compiler team to further process (TODO: improve this section)
+- Get a list of all the issues labelled with beta-nominated
+- Check if all of them have a team label (T-* or libs-impl)
+- If such labels are missing, label the issue with the appropriate
+  T-compiler or libs-impl when it corresponds
 
-* also cc folks to bisect
-* (usually ICE), usually includes needs-bisection and needs-mcve
+###  ...
 
-#### 4. Compiler team triage group analysis
+---
 
-If the issue is found to be a critical bug, the label [P-critical](priority-levels.html#p-critical) will be applied and a discussion will happen whether the issue need to be delegated to another team.
-
-## The process in detail
-
-Summary of the important moments of the biweekly iteration:
-
-- [Drafting the meeting agenda](#drafting-the-meeting-agenda)
-- [Day before the meeting](#day-before-the-meeting)
-- [After the meeting](#after-the-meeting)
-
-We check issues for `T-compiler` and `libs-impl` and also stable/beta nominations for `T-rustdoc`.
-
-We are in the process of automating some of our work and we execute some other things in an async way. In particular, some Zulip topics are created when certain things happen to some issue.
-
-## Async process proposal (TODO: what is this section and what to do with it?)
+## Async procedure
 
 1. The agenda is created as soon as we finish our thursday's weekly meeting.
 2. Unprioritized issues: a Zulip topic is created requesting prioritization when an issue is labelled with `I-prioritize`. Regressions and `I-unsound` issues that do not `requires-nightly` are automatizally tagged with `I-prioritize`.
@@ -53,9 +72,9 @@ We are in the process of automating some of our work and we execute some other t
 
 ## Drafting the meeting agenda
 
-The draft is currently prepared by running a CLI tool, the [triagebot prioritization script](https://github.com/rust-lang/triagebot). Run it with `cargo run --bin prioritization`. The CLI will output a sequence of steps formatted as a markdown snippet. Each step represents a section of the meeting (TODO: is it?).
+The draft is currently prepared by running a CLI tool.
 
-Note: In general for issues that not labeled with `T-compiler` or `libs-impl`, we want to first check if these labels are relevant and apply them (TODO: why? what does it mean?)
+Note: In general for issues that not labeled with `T-compiler` or `libs-impl`, add the appropriate labels.
 
 These steps are:
 
@@ -71,7 +90,7 @@ Below each step of the Triagebot CLI is explained.
 
 ### 1. Unprioritized I-prioritize
 
-We need all `I-prioritize` issues for `T-compiler` and `libs-impl` to be actually prioritized. To do so, we add one of the `P-critical`, `P-high`, `P-medium` or `P-low` labels and remove `I-prioritize` and also add a text like: "Assigning `P-XXX` as [discussed as part of the Prioritization Working Group process](link_to_zulip_conversation) and removing `I-prioritize`."
+We need all `I-prioritize` issues for `T-compiler` and `libs-impl` to be actually prioritized. To do so, we add one of the `P-critical`, `P-high`, `P-medium` or `P-low` labels and remove `I-prioritize` and also add a text like: "Assigning `P-XXX` as [discussed as part of the Prioritization Working Group procedure](link_to_zulip_conversation) and removing `I-prioritize`."
 
 Note: These lists should typically be empty when we are close to the meeting.
 
@@ -146,17 +165,13 @@ Check how packed the agenda looks like and if there's room for more, consider im
   - [unassigned](https://github.com/rust-lang/rust/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3AT-compiler+label%3AP-high+no%3Aassignee)
 - [libs-impl P-high](https://github.com/rust-lang/rust/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3Alibs-impl+label%3AP-high+)
 
-### 7. Final review
+### Fill agenda announcements
 
-- Check the compiler calendar to see if there's an outstanding event to announce and add them to the agenda.
-- Add Major Changes Proposals
+Check the compiler calendar to see if there's an outstanding event to announce and add them to the agenda.
 
 #### Toolstate
 
-TODO: add a short description?
-
-- Check [toolstate](https://rust-lang-nursery.github.io/rust-toolstate/) for outstanding tool breakage.
-  - Notify teams in the corresponding channels
+Check [toolstate](https://rust-lang-nursery.github.io/rust-toolstate/) for tool breakage and notify teams in the corresponding channels.
 
 #### Performance regressions
 
@@ -165,12 +180,14 @@ TODO: add a short description?
 - Check [perf regressions](http://perf.rust-lang.org/index.html).
   - Notify involved actors.
 
-## Day before the meeting
+## Notify the team about the meeting
 
-TODO: improve this section
+### Figure out which WGs need to check-in
 
 [Check which working groups should do their check-ins.](https://rust-lang.github.io/compiler-team/about/triage-meeting/)
 `YYYY-MM-DD` is the date of the meeting.
+
+### Notify the team about the meeting
 
 A topic on Zulip will be created with the following format
 
@@ -188,10 +205,3 @@ We will have checkins from @*WG-X* and @*WG-Y*
 @**person1** do you have something you want to share about @*WG-X*?
 @**person2** do you have something you want to share about @*WG-Y*?
 ```
-
-## After the meeting
-
-- Remove `I-nominated` tags of already discussed issues
-- Add stable/beta-accepted labels or reject nomination for backport nominations
-- Close all accepted MCPs
-- Start agenda for next meeting using [this template](https://hackmd.io/WQW0yzDDS16YvtBNurmj6A?both)
